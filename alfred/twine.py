@@ -10,7 +10,7 @@ def twine():
     login = os.getenv("TWINE_USERNAME")
     password = os.getenv("TWINE_PASSWORD")
 
-    if not login and not password:
+    if not login or not password:
         print("")
         print("The credentials for pypi are missing. You have to be defined through environment variables TWINE_USERNAME and TWINE_PASSWORD")
         print("export TWINE_USERNAME=__token__")
