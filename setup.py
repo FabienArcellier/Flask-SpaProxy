@@ -9,6 +9,8 @@ setup(
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
     install_requires = [
+        'flask',
+        'requests'
     ],
     extras_require={
         'dev': [
