@@ -5,11 +5,12 @@ from typing import List, Callable, Optional
 from flask import Flask
 
 from flask_spaproxy import reverse_proxy
+from flask_spaproxy.utils import is_url_for_file
 
 
 class SpaProxy:
 
-    def __init__(self, app: Flask, view_decorators: Optional[List[Callable]] = None):
+    def __init__(self, app: Flask, spa_page='index.html', view_decorators: Optional[List[Callable]] = None):
         """
         Initialize route to serve frontend application. If FLASK_SPA_PROXY_URL is defined,
         it will set a route that will fetch unknown resource from the url given in input.
@@ -17,6 +18,7 @@ class SpaProxy:
         Otherwise, it will use the static_folder to send requested resources.
 
         :param app: flask web application
+        :param spa_page: spa html file to send on any url that is not a file
         :param view_decorators:
             a list of view decorator that Flask SpaProxy will use over
             the proxy route (login requirement, ...).
@@ -31,6 +33,7 @@ class SpaProxy:
 
             >>> SpaProxy(webapp, view_decorators=[login_required, audit_trail])
         """
+        self._spa_page = spa_page
         self._app = app
         self._spa_url = os.getenv('FLASK_SPA_PROXY_URL', None)
         if view_decorators is None:
@@ -58,8 +61,8 @@ class SpaProxy:
         return response
 
     def static_index(self, subpath: str):
-        if subpath in ["/", ""]:
-            return self._app.send_static_file('index.html')
+        if not is_url_for_file(subpath):
+            return self._app.send_static_file(self._spa_page)
 
         return self._app.send_static_file(subpath)
 
