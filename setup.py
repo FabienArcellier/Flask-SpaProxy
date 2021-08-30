@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='Flask-SpaProxy',
-    version='1.0.0',
+    version='0.1',
     packages=find_packages(exclude=["*_tests.*", "*_tests"]),
     license='MIT license',
     long_description=open('README.md').read(),
